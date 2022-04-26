@@ -1,0 +1,27 @@
+﻿<Window x:Class="Notetaking.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Notetaking"
+        mc:Ignorable="d"
+        Title="Notetaking" Height="720" Width="1024">
+    <Grid x:Name="ContentsGrid">
+        <ContentControl x:Name="ContentControl" HorizontalAlignment="Left" Margin="144,67,0,0" VerticalAlignment="Top"/>
+        <TextBlock x:Name="AppTitle" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="24" FontWeight="Bold"><Run Language="da-dk" Text="Notetaking"/></TextBlock>
+        <ListBox x:Name="NotesList" Margin="10,67,0,0" Height="319" VerticalAlignment="Top" SelectionChanged="NotesList_SelectionChanged" d:ItemsSource="{d:SampleData ItemCount=5}" Width="122" HorizontalAlignment="Left">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="0,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Title}" />
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <TextBlock x:Name="NotesListTitle" HorizontalAlignment="Left" Margin="10,47,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Language="da-dk" Text="Notes"/></TextBlock>
+        <Button x:Name="CreateNewNoteBtn" Content="Create new Note" HorizontalAlignment="Left" Margin="10,395,0,0" VerticalAlignment="Top" Click="CreateNewNoteBtn_Click"/>
+    </Grid>
+</Window>
