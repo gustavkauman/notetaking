@@ -46,6 +46,11 @@ namespace Notetaking
 
         private void NotesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (e.AddedItems.Count == 0)
+            {
+                return;
+            }
+
             var content = ContentControl.Content;
             if (content != null && 
                 content is EditNoteControl && 
@@ -81,6 +86,11 @@ namespace Notetaking
             var control = new EditNoteControl();
             control.SetNote(dbNote);
             ContentControl.Content = control;
+        }
+
+        public void ResetContent()
+        {
+            ContentControl.Content = null;
         }
 
         private void CreateNewNoteBtn_Click(object sender, RoutedEventArgs e)

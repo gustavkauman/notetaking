@@ -13,7 +13,8 @@
         <TextBox x:Name="Note" HorizontalAlignment="Left" Margin="10,108,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="375" Height="184" TextChanged="Note_TextChanged"/>
         <Button x:Name="SaveNoteBtn" Content="Save note!" HorizontalAlignment="Left" Margin="10,305,0,0" VerticalAlignment="Top" Click="Button_Click"/>
         <TextBlock x:Name="Title" HorizontalAlignment="Left" Margin="10,11,0,0" TextWrapping="Wrap" Text="Edit note" VerticalAlignment="Top"/>
-        <TextBlock x:Name="NoteSavedText" HorizontalAlignment="Left" Margin="85,309,0,0" TextWrapping="Wrap" Text="Note saved!" VerticalAlignment="Top" FontSize="10" Visibility="Hidden"/>
+        <TextBlock x:Name="NoteSavedText" HorizontalAlignment="Left" Margin="157,308,0,0" TextWrapping="Wrap" Text="Note saved!" VerticalAlignment="Top" FontSize="10" Visibility="Hidden"/>
+        <Button x:Name="DeleteNoteBtn" Content="Delete note!" HorizontalAlignment="Left" Margin="80,305,0,0" VerticalAlignment="Top" Click="Button_Click"/>
 
     </Grid>
 </UserControl>

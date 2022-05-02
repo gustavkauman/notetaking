@@ -38,11 +38,29 @@ namespace Notetaking
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            switch (((Button) e.Source).Name)
+            {
+                case "SaveNoteBtn":
+                    HandleSaveBtnClicked();
+                    break;
+                case "DeleteNoteBtn":
+                    HandleDeleteBtnClicked();
+                    break;
+            }
+        }
+
+        private void HandleSaveBtnClicked()
+        {
             ObjectNote.Title = NoteTitle.Text;
             ObjectNote.Body = Note.Text;
             App.NoteController.UpdateNote(ObjectNote);
             IsDirty = false;
             NoteSavedText.Visibility = Visibility.Visible;
+        }
+
+        private void HandleDeleteBtnClicked()
+        {
+            App.NoteController.DeleteNote(ObjectNote);
         }
 
         private void Note_TextChanged(object sender, TextChangedEventArgs e)

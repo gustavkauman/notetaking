@@ -9,11 +9,9 @@ namespace Notetaking
     internal class NoteController
     {
         public static NoteController Instance;
-        private ObservableCollection<Note> Notes;
 
         private NoteController()
         {
-            Notes = new ObservableCollection<Note>();
         }
 
         public static NoteController GetInstance()
@@ -26,13 +24,7 @@ namespace Notetaking
 
         public void AddAllNotes(IList<Note> notes)
         {
-            foreach (var note in notes)
-            {
-                Notes.Add(note);
-                Trace.WriteLine($"Added note with id: {note.NoteId}");
-            }
-
-            App.MainWindow.SetNotes(Notes);
+            App.MainWindow.SetNotes(new ObservableCollection<Note>(notes));
         }
 
         public void AddNote(string title, string body)
@@ -41,10 +33,7 @@ namespace Notetaking
             var note = new Note() { Title = title, Body = body };
             db.Notes.Add(note);
             db.SaveChanges();
-
-            Notes.Add(note);
-            App.MainWindow.SetNotes(Notes);
-            Trace.WriteLine($"Total number of notes: {Notes.Count}");            
+            App.MainWindow.RefreshNotes();
         }
 
         public void UpdateNote(Note note)
@@ -55,19 +44,32 @@ namespace Notetaking
                 AddNote(note.Title, note.Body);
             }
 
-            var index = Notes.IndexOf(note);
-            if (index == -1)
+            var db = App.DBContext;
+            var dbNote = db.Notes.Find(note.NoteId);
+            if (dbNote == null)
             {
-                // Note note found in the list
                 return;
             }
 
-            var db = App.DBContext;
-            var dbNote = db.Notes.Find(note.NoteId);
             db.Entry(dbNote).CurrentValues.SetValues(note);
             db.SaveChanges();
 
             App.MainWindow.RefreshNotes();
+        }
+
+        public void DeleteNote(Note note)
+        {
+            if (note.NoteId <= 0)
+            {
+                // Method was incorrectly called
+                return;
+            }
+
+            var db = App.DBContext;
+            db.Entry(note).State = EntityState.Deleted;
+            db.SaveChanges();
+            App.MainWindow.RefreshNotes();
+            App.MainWindow.ResetContent();
         }
     }
 
