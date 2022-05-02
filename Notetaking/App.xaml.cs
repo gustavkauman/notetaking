@@ -15,12 +15,14 @@ namespace Notetaking
     {
         internal static NoteController NoteController { get; set; }
         internal static MainWindow MainWindow { get; set; }
+        internal static NotetakingContext DBContext { get; set; }
 
         private void AppStartup(object sender, StartupEventArgs args)
         {
             NoteController = NoteController.GetInstance();
-
+            DBContext = new NotetakingContext();
             MainWindow = new MainWindow();
+            NoteController.AddAllNotes(DBContext.Notes.ToList());
             MainWindow.Show();
         }
     }
