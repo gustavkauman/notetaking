@@ -37,16 +37,37 @@ namespace Notetaking
 
         public void AddNote(string title, string body)
         {
-            using (var db = App.DBContext)
-            {
-                var note = new Note() { Title = title, Body = body };
-                db.Notes.Add(note);
-                db.SaveChanges();
+            var db = App.DBContext;
+            var note = new Note() { Title = title, Body = body };
+            db.Notes.Add(note);
+            db.SaveChanges();
 
-                Notes.Add(note);
-                App.MainWindow.SetNotes(Notes);
-                Trace.WriteLine($"Total number of notes: {Notes.Count}");
+            Notes.Add(note);
+            App.MainWindow.SetNotes(Notes);
+            Trace.WriteLine($"Total number of notes: {Notes.Count}");            
+        }
+
+        public void UpdateNote(Note note)
+        {
+            if (note.NoteId <= 0)
+            {
+                // Method was incorrectly called
+                AddNote(note.Title, note.Body);
             }
+
+            var index = Notes.IndexOf(note);
+            if (index == -1)
+            {
+                // Note note found in the list
+                return;
+            }
+
+            var db = App.DBContext;
+            var dbNote = db.Notes.Find(note.NoteId);
+            db.Entry(dbNote).CurrentValues.SetValues(note);
+            db.SaveChanges();
+
+            App.MainWindow.RefreshNotes();
         }
     }
 

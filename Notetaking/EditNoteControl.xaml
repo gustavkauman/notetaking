@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="Notetaking.EditNoteControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Notetaking"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <TextBox x:Name="NoteTitle" HorizontalAlignment="Left" Margin="10,54,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="200" TextChanged="NoteTitle_TextChanged"/>
+        <TextBlock x:Name="NoteTitleCaption" HorizontalAlignment="Left" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="Note title" FontSize="10"/>
+        <TextBlock x:Name="NoteBodyCaption" HorizontalAlignment="Left" Margin="10,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="10" Width="76"><Run Language="da-dk" Text="Note"/></TextBlock>
+        <TextBox x:Name="Note" HorizontalAlignment="Left" Margin="10,108,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="375" Height="184" TextChanged="Note_TextChanged"/>
+        <Button x:Name="SaveNoteBtn" Content="Save note!" HorizontalAlignment="Left" Margin="10,305,0,0" VerticalAlignment="Top" Click="Button_Click"/>
+        <TextBlock x:Name="Title" HorizontalAlignment="Left" Margin="10,11,0,0" TextWrapping="Wrap" Text="Edit note" VerticalAlignment="Top"/>
+        <TextBlock x:Name="NoteSavedText" HorizontalAlignment="Left" Margin="85,309,0,0" TextWrapping="Wrap" Text="Note saved!" VerticalAlignment="Top" FontSize="10" Visibility="Hidden"/>
+
+    </Grid>
+</UserControl>

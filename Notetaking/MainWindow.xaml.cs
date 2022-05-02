@@ -21,6 +21,8 @@ namespace Notetaking
     /// </summary>
     public partial class MainWindow : Window
     {
+        private bool WasForced { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -36,9 +38,49 @@ namespace Notetaking
             NotesList.ItemsSource = Notes;
         }
 
+        public void RefreshNotes()
+        {
+            var db = App.DBContext;
+            this.SetNotes(new ObservableCollection<Note>(db.Notes.ToList()));
+        }
+
         private void NotesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Do nothing for now.
+            var content = ContentControl.Content;
+            if (content != null && 
+                content is EditNoteControl && 
+                e.RemovedItems.Count > 0 && 
+                !WasForced)
+            {
+                // ContentControl is of type EditNoteControl AND we actually moved from one value to another
+                if ((content as EditNoteControl).IsDirty)
+                {
+                    if (MessageBox.Show("Changing view will loose unsaved progress. Are you sure?", "Confirmation Dialog", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                    {
+                        WasForced = true;
+                        NotesList.SelectedItem = e.RemovedItems[0];
+                        return;
+                    }
+                }
+            }
+
+            if (WasForced)
+            {
+                WasForced = false;
+                return;
+            }
+
+            var db = App.DBContext;
+            var id = ((Note)NotesList.SelectedValue).NoteId;
+            var dbNote = db.Notes.Find(id);
+            if (dbNote == null)
+            {
+                return;
+            }
+
+            var control = new EditNoteControl();
+            control.SetNote(dbNote);
+            ContentControl.Content = control;
         }
 
         private void CreateNewNoteBtn_Click(object sender, RoutedEventArgs e)
