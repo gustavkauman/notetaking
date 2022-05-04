@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System;
+using Notetaking.Exceptions;
 
 namespace Notetaking
 {
@@ -40,15 +41,14 @@ namespace Notetaking
         {
             if (note.NoteId <= 0)
             {
-                // Method was incorrectly called
-                AddNote(note.Title, note.Body);
+                throw new ArgumentException($"The note id of {nameof(note)} must be greater than or equal to 0");
             }
 
             var db = App.DBContext;
             var dbNote = db.Notes.Find(note.NoteId);
             if (dbNote == null)
             {
-                return;
+                throw new DatabaseRecordMissingException("Cannot update note because note not found in database!");
             }
 
             db.Entry(dbNote).CurrentValues.SetValues(note);
@@ -61,8 +61,7 @@ namespace Notetaking
         {
             if (note.NoteId <= 0)
             {
-                // Method was incorrectly called
-                return;
+                throw new ArgumentException($"The note id of {nameof(note)} cannot be less than or equal to 0");
             }
 
             var db = App.DBContext;
@@ -71,12 +70,5 @@ namespace Notetaking
             App.MainWindow.RefreshNotes();
             App.MainWindow.ResetContent();
         }
-    }
-
-    public class Note
-    {
-        public int NoteId { get; set; }
-        public string Title { get; set; }
-        public string Body { get; set; }
     }
 }
