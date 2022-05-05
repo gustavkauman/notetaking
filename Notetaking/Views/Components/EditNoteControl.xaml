@@ -15,6 +15,34 @@
         <TextBlock x:Name="Title" HorizontalAlignment="Left" Margin="10,11,0,0" TextWrapping="Wrap" Text="Edit note" VerticalAlignment="Top"/>
         <TextBlock x:Name="NoteSavedText" HorizontalAlignment="Left" Margin="157,308,0,0" TextWrapping="Wrap" Text="Note saved!" VerticalAlignment="Top" FontSize="10" Visibility="Hidden"/>
         <Button x:Name="DeleteNoteBtn" Content="Delete note!" HorizontalAlignment="Left" Margin="80,305,0,0" VerticalAlignment="Top" Click="Button_Click"/>
+        <ListBox x:Name="PossibleRelatedNotesListBox" Margin="400,108,295,188" Width="120" Height="155" SelectionMode="Multiple" SelectionChanged="PossibleRelatedNotesListBox_SelectionChanged">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="0,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Title}" />
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button x:Name="SaveRelationsBtn" Content="Add relations" HorizontalAlignment="Left" Margin="408,272,0,0" VerticalAlignment="Top" Width="104" Click="SaveRelationsBtn_Click"/>
+        <TextBlock x:Name="AddRelationsCaption" HorizontalAlignment="Left" Margin="400,86,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="10"><Run Language="da-dk" Text="Add relations"/></TextBlock>
+        <ListBox x:Name="RelatedNotesListBox" Margin="526,108,164,187" Width="120" Height="155" SelectionMode="Extended" SelectionChanged="RelatedNotesListBox_SelectionChanged">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="0,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox IsChecked="{Binding IsSelected}" Content="{Binding Text}" />
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button x:Name="RemoveRelationsBtn" Content="Remove relations" HorizontalAlignment="Left" Margin="533,272,0,0" VerticalAlignment="Top" Width="106" Click="RemoveRelationsBtn_Click"/>
+        <TextBlock x:Name="RelationsCaption" HorizontalAlignment="Left" Margin="527,86,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="10"><Run Text="Relations"/></TextBlock>
 
     </Grid>
 </UserControl>

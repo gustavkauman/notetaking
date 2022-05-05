@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System;
 using Notetaking.Exceptions;
+using Notetaking.Models;
+using System.Linq;
 
 namespace Notetaking
 {
@@ -69,6 +71,34 @@ namespace Notetaking
             db.SaveChanges();
             App.MainWindow.RefreshNotes();
             App.MainWindow.ResetContent();
+        }
+
+        public void AddRelation(int FromNoteId, int ToNoteId)
+        {
+            var db = App.DBContext;
+            var exists = db.NoteRelation.Where(nr => nr.FromNoteId == FromNoteId && nr.ToNoteId == ToNoteId).ToList().Count > 0;
+            if (exists)
+                return;
+
+            // Clear change tracker since it has tracked the entity during read
+            db.ChangeTracker.Clear();
+
+            db.NoteRelation.Add(new NoteRelation() { FromNoteId = FromNoteId, ToNoteId = ToNoteId });
+            db.SaveChanges();
+        }
+
+        public void RemoveRelation(int FromNoteId, int ToNoteId)
+        {
+            var db = App.DBContext;
+            var missing = db.NoteRelation.Where(nr => nr.FromNoteId == FromNoteId && nr.ToNoteId == ToNoteId).ToList().Count <= 0;
+            if (missing)
+                return;
+
+            // Clear change tracker since it has tracked the entity during read
+            db.ChangeTracker.Clear();
+
+            db.NoteRelation.Remove(new NoteRelation() { FromNoteId = FromNoteId, ToNoteId = ToNoteId });
+            db.SaveChanges();
         }
     }
 }
