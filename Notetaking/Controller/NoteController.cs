@@ -100,5 +100,38 @@ namespace Notetaking
             db.NoteRelation.Remove(new NoteRelation() { FromNoteId = FromNoteId, ToNoteId = ToNoteId });
             db.SaveChanges();
         }
+
+        public IList<Note> GetPossibleRelatedNotes(Note note)
+        {
+            var db = App.DBContext;
+            var possibleNotes = db.Notes.Where(n => n.NoteId != note.NoteId).ToDictionary(note => note.NoteId, note => note);
+            var query = from noteRelation in db.Set<NoteRelation>().Where(nr => nr.FromNoteId == note.NoteId)
+                        join dbNote in db.Set<Note>()
+                            on noteRelation.ToNoteId equals dbNote.NoteId
+                        select new { noteRelation, dbNote };
+            var relatedNotesResult = query.ToList();
+
+            foreach (var relatedNote in relatedNotesResult)
+            {
+                if (possibleNotes.ContainsKey(relatedNote.noteRelation.ToNoteId))
+                {
+                    possibleNotes.Remove(relatedNote.noteRelation.ToNoteId);
+                }
+            }
+
+            return possibleNotes.Values.ToList();
+        }
+
+        public IList<Note> GetRelatedNotes(Note note)
+        {
+            var db = App.DBContext;
+            var result = new List<Note>();
+            var relations = db.NoteRelation.Where(nr => nr.FromNoteId == note.NoteId).ToList();
+            foreach (var rel in relations)
+            {
+                result.Add(db.Notes.Find(rel.ToNoteId));
+            }
+            return result;
+        }
     }
 }

@@ -58,8 +58,7 @@ namespace Notetaking
             ObjectNote.Title = NoteTitle.Text;
             ObjectNote.Body = Note.Text;
             App.NoteController.UpdateNote(ObjectNote);
-            IsDirty = false;
-            NoteSavedText.Visibility = Visibility.Visible;
+            MarkClean();
         }
 
         private void HandleDeleteBtnClicked()
@@ -100,12 +99,9 @@ namespace Notetaking
 
         private void RemoveRelationsBtn_Click(object sender, RoutedEventArgs e)
         {
-            foreach (RelatedNotesListItem item in RelatedNotesListBox.Items)
+            foreach (Note note in RelatedNotesListBox.SelectedItems)
             {
-                if (item.IsSelected)
-                {
-                    App.NoteController.RemoveRelation(ObjectNote.NoteId, item.NoteId);
-                }
+                App.NoteController.RemoveRelation(ObjectNote.NoteId, note.NoteId);
             }
 
             UpdateLists();
@@ -115,26 +111,8 @@ namespace Notetaking
         #region Aux
         private void UpdateLists()
         {
-            var db = App.DBContext;
-            var possibleNotes = db.Notes.Where(n => n.NoteId != ObjectNote.NoteId).ToDictionary(note => note.NoteId, note => note);
-            var query = from noteRelation in db.Set<NoteRelation>().Where(nr => nr.FromNoteId == ObjectNote.NoteId)
-                        join dbNote in db.Set<Note>()
-                            on noteRelation.ToNoteId equals dbNote.NoteId
-                        select new { noteRelation, dbNote };
-            var relatedNotesResult = query.ToList();
-            var relatedNotesList = new List<RelatedNotesListItem>();
-
-            foreach (var relatedNote in relatedNotesResult)
-            {
-                if (possibleNotes.ContainsKey(relatedNote.noteRelation.ToNoteId))
-                {
-                    possibleNotes.Remove(relatedNote.noteRelation.ToNoteId);
-                }
-                relatedNotesList.Add(new RelatedNotesListItem() { NoteId = relatedNote.noteRelation.ToNoteId, Text = relatedNote.dbNote.Title });
-            }
-
-            PossibleRelatedNotesListBox.ItemsSource = possibleNotes.Values.ToList();
-            RelatedNotesListBox.ItemsSource = relatedNotesList;
+            PossibleRelatedNotesListBox.ItemsSource = App.NoteController.GetPossibleRelatedNotes(ObjectNote);
+            RelatedNotesListBox.ItemsSource = App.NoteController.GetRelatedNotes(ObjectNote);
         }
 
         private void MarkDirty()
@@ -148,14 +126,6 @@ namespace Notetaking
             this.IsDirty = false;
             NoteSavedText.Visibility = Visibility.Visible;
         }
-
         #endregion
-    }
-
-    public class RelatedNotesListItem
-    {
-        public int NoteId { get; set; }
-        public string Text { get; set; }
-        public bool IsSelected { get; set; } = false;
     }
 }

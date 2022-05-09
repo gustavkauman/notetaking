@@ -36,7 +36,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <CheckBox IsChecked="{Binding IsSelected}" Content="{Binding Text}" />
+                        <TextBlock Text="{Binding Title}" />
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
