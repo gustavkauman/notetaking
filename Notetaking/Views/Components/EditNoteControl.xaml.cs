@@ -17,9 +17,6 @@ using System.Windows.Shapes;
 
 namespace Notetaking
 {
-    /// <summary>
-    /// Interaction logic for UserControl1.xaml
-    /// </summary>
     public partial class EditNoteControl : UserControl
     {
         public Note ObjectNote { get; private set; }
